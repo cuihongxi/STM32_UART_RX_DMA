@@ -1,37 +1,9 @@
-# STM32_UART_RX_DMA
-
-#### 介绍
-封装了串口接收DMA
-
-#### 软件架构
-软件架构说明
-
-
-#### 安装教程
-
-1. xxxx
-2. xxxx
-3. xxxx
-
-#### 使用说明
-
-1. xxxx
-2. xxxx
-3. xxxx
-
-#### 参与贡献
-
-1. Fork 本仓库
-2. 新建 Feat_xxx 分支
-3. 提交代码
-4. 新建 Pull Request
-
-
-#### 码云特技
-
-1. 使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2. 码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3. 你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4. [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5. 码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6. 码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+﻿	2019年8月3日16:32:09
+	串口接收DMA
+	
+	使用方法：
+						1. 定义变量： DMA_rxStr rxStr 
+						2. 调用 UartRX_Start 函数，配置串口句柄，DMA句柄；DMA空闲接收中断开启
+						3. it.c 文件中，将函数 UsartInIT_IDLE(DMA_rxStr* pRx_str) 放入串口中断 global interrupt 中，
+						   并包含头文件传入参数
+						4. 主函数做处理 ，如果 rxStr.num 不为 0 ，则说明接收到数据，长度为rxStr.num，对数据进行处理，并清空rxStr.num
