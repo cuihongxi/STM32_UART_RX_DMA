@@ -1,21 +1,5 @@
 #include "UART_RX_DMA.H"
 
-/**
-		配置并启动DMA
-*/
-void UartRX_Start(UART_HandleTypeDef* huart, DMA_HandleTypeDef* hdma_usart_rx, DMA_rxStr* dmaStr)
-{
-	dmaStr->length = RXBUF_LEN;	
-	dmaStr->callback_IDLE = UsartInIT_IDLE;
-	dmaStr->huart = huart;
-	dmaStr->hdma_usart_rx = hdma_usart_rx;
-
-	HAL_UART_Receive_DMA(dmaStr->huart, dmaStr->buf, dmaStr->length);
-	__HAL_UART_ENABLE_IT(dmaStr->huart, UART_IT_IDLE);						// 开启空闲接收中断 
-	__HAL_UART_CLEAR_IDLEFLAG(dmaStr->huart); 								// 清空闲中断
-
-}
-
 //DMA空闲中断函数
 void DMAInUART_IDLE(DMA_rxStr* pRx_str)
 {
@@ -35,8 +19,27 @@ void DMAInUART_IDLE(DMA_rxStr* pRx_str)
 	}
 
 }
+
 /* 串口接收中断中调用的函数 */
 void UsartInIT_IDLE(DMA_rxStr* pRx_str)
 {
 	DMAInUART_IDLE(pRx_str);
 }
+
+/**
+		配置并启动DMA
+*/
+void UartRX_Start(UART_HandleTypeDef* huart, DMA_HandleTypeDef* hdma_usart_rx, DMA_rxStr* dmaStr)
+{
+	dmaStr->length = RXBUF_LEN;	
+	dmaStr->callback_IDLE = UsartInIT_IDLE;
+	dmaStr->huart = huart;
+	dmaStr->hdma_usart_rx = hdma_usart_rx;
+
+	HAL_UART_Receive_DMA(dmaStr->huart, dmaStr->buf, dmaStr->length);
+	__HAL_UART_ENABLE_IT(dmaStr->huart, UART_IT_IDLE);						// 开启空闲接收中断 
+	__HAL_UART_CLEAR_IDLEFLAG(dmaStr->huart); 								// 清空闲中断
+
+}
+
+
