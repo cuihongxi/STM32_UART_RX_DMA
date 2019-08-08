@@ -6,12 +6,11 @@ void DMAInUART_IDLE(DMA_rxStr* pRx_str)
 	if (__HAL_UART_GET_FLAG(pRx_str->huart, UART_FLAG_IDLE)) //IDLE中断。备注：IDLE中断标志的清除是读一次USART_SR寄存器，接着读一次USART_DR寄存器
 	{
 
-		if (pRx_str->hdma_usart_rx->Instance->CNDTR <= pRx_str->length)
+		if (__HAL_DMA_GET_COUNTER(pRx_str->hdma_usart_rx) <= pRx_str->length)
 		{
-			pRx_str->num = pRx_str->length - pRx_str->hdma_usart_rx->Instance->CNDTR;
+			pRx_str->num = pRx_str->length - __HAL_DMA_GET_COUNTER(pRx_str->hdma_usart_rx) <= pRx_str->length;
 			HAL_UART_AbortReceive(pRx_str->huart);				// huart->RxState = HAL_UART_STATE_READY，并HAL_DMA_Abort(hdma_usart_rx)
-			pRx_str->hdma_usart_rx->Instance->CNDTR = pRx_str->length;	// 这个寄存器只能在通道不工作(DMA_CCRx的EN=0)时写入  
-		
+			__HAL_DMA_SET_COUNTER(pRx_str->hdma_usart_rx, pRx_str->length); // 这个寄存器只能在通道不工作(DMA_CCRx的EN=0)时写入  
 		}
 
 		__HAL_UART_CLEAR_IDLEFLAG(pRx_str->huart);
